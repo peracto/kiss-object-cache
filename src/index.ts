@@ -23,12 +23,12 @@ export function cacheChange<T, TResult>(evaluate: () => T, build: (o:T) => TResu
     }
 }
 
-export function cacheTimed<TResult>(ttl: number, fn: () => TResult) : () => TResult {
+export function cacheTimed<TResult,TState>(ttl: number, fn: (state?:TState) => TResult, state?:TState) : () => TResult {
     let result : TResult
     let expire : number = 0
     return () => {
         if(Date.now() >= expire) {
-            result = fn()
+            result = fn(state)
             expire = Date.now() + ttl
         }
         return result
